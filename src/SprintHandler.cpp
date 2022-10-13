@@ -38,7 +38,7 @@ namespace SprintHandler
 			if (!isPlayerSprinting)
 				StartSprinting(player);
 
-		} else if (sprintDelaySeconds > 0.0f && a_event->IsHeld()) {
+		} else if (a_event->IsHeld()) {
 			if (a_event->HeldDuration() < sprintDelaySeconds)
 				return;
 
