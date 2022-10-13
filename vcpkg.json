@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "sprint-tweaks",
+  "version-string": "1.0.0",
+  "port-version": 0,
+  "description": "Personal tweaks for toggling sprinting, based on https://www.nexusmods.com/skyrimspecialedition/mods/20166",
+  "homepage": "https://www.skyrimng.com",
+    "license": "Apache-2.0",
+    "features": {
+        "plugin": {
+            "description": "Build the SKSE plugin.",
+          "dependencies": [
+            "boost-stl-interfaces",
+            "commonlibsse-ng-flatrim",
+            "simpleini",
+            "rsm-binary-io"
+          ]
+        }
+    },
+    "default-features": [
+        "plugin"
+    ]
+}

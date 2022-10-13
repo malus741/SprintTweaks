@@ -3,7 +3,7 @@ AccessModifierOffset: -4
 AlignAfterOpenBracket: DontAlign
 AlignConsecutiveAssignments: 'false'
 AlignConsecutiveBitFields: 'false'
-AlignConsecutiveDeclarations: 'false'
+AlignConsecutiveDeclarations: 'true'
 AlignConsecutiveMacros: 'false'
 AlignEscapedNewlines: Left
 AlignOperands: Align
@@ -23,18 +23,19 @@ AlwaysBreakBeforeMultilineStrings: 'true'
 AlwaysBreakTemplateDeclarations: 'Yes'
 BinPackArguments: 'true'
 BinPackParameters: 'true'
+BitFieldColonSpacing: After
 BraceWrapping:
     AfterCaseLabel: 'true'
     AfterClass: 'true'
-    AfterControlStatement: 'true'
+    AfterControlStatement: 'false'
     AfterEnum: 'true'
     AfterFunction: 'true'
     AfterNamespace: 'true'
     AfterStruct: 'true'
     AfterUnion: 'true'
     AfterExternBlock: 'true'
-    BeforeCatch: 'true'
-    BeforeElse: 'true'
+    BeforeCatch: 'false'
+    BeforeElse: 'false'
     BeforeLambdaBody: 'false'
     BeforeWhile: 'false'
     IndentBraces: 'false'
