@@ -1,4 +1,3 @@
-#include "Data.h"
 #include "Hooks.h"
 #include "Papyrus.h"
 #include "Settings.h"
@@ -15,9 +14,7 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 	case SKSE::MessagingInterface::kDataLoaded:  // All ESM/ESL/ESP plugins have loaded, main menu is now active.
 		// It is now safe to access form data.
 		Settings::ReadSettings();
-		Data::LoadData();
 		Hooks::SprintHandlerHook::Hook();
-		Hooks::ActorStateHook::Hook();
 		Papyrus::Register();
 		break;
 
@@ -89,7 +86,8 @@ extern "C" DLLEXPORT constinit auto SKSEPlugin_Version = []() {
 	v.PluginName(Plugin::NAME);
 
 	v.UsesAddressLibrary(true);
-	v.CompatibleVersions({ SKSE::RUNTIME_SSE_1_6_353 });
+	v.CompatibleVersions({ SKSE::RUNTIME_SSE_LATEST });
+	v.HasNoStructUse(true);
 
 	return v;
 }();

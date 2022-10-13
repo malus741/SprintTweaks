@@ -1,5 +1,4 @@
 #include "SprintHandler.h"
-#include "Data.h"
 #include "Settings.h"
 #include "Utils.h"
 
@@ -45,14 +44,6 @@ namespace SprintHandler
 			if (currentStamina > 0.0f && !isPlayerSprinting)
 				return StartSprinting(player);
 
-			float mountSprintDelaySeconds = Settings::MountedSprintBoostDelay / 1000;
-			if (Settings::MountedSprintBoost && player->IsOnMount() && a_event->HeldDuration() >= mountSprintDelaySeconds + sprintDelaySeconds) {
-				RE::NiPointer<RE::Actor> currentMount;
-				if (player->GetMount(currentMount)) {
-					CastMountSprintBoostSpell(currentMount.get());
-				}
-			}
-
 		} else if (a_event->IsUp() && isPlayerSprinting) {
 			StopSprinting(player);
 		}
@@ -65,51 +56,8 @@ namespace SprintHandler
 
 		if (player->GetMount(currentMount)) {
 			if (a_event->IsDown()) {
-				if (!isPlayerSprinting)
-					return StartSprinting(player);
-
-				if (Settings::MountedSprintBoost) {
-					if (currentMount->AsActorValueOwner()->GetActorValue(RE::ActorValue::kStamina) < Settings::MountedSprintBoostCost)
-						return Utils::FlashStaminaMeter();
-
-					CastMountSprintBoostSpell(currentMount.get());
-					currentMount->AsActorValueOwner()->RestoreActorValue(RE::ACTOR_VALUE_MODIFIER::kDamage, RE::ActorValue::kStamina, -Settings::MountedSprintBoostCost);
-
-				} else {
-					if (isPlayerSprinting)
-						StopSprinting(player);
-				}
+				isPlayerSprinting ? StopSprinting(player) : StartSprinting(player);
 			}
 		}
 	}
-
-	void SprintHandler::CastMountSprintBoostSpell(RE::Actor* mount)
-	{
-		RE::ActiveEffect* mountSprintBoostActiveEffect = GetMountSprintBoostActiveEffect(mount);
-
-		if (mountSprintBoostActiveEffect) {
-			mountSprintBoostActiveEffect->elapsedSeconds = 0;
-		} else {
-			float currentSpeedMult = mount->AsActorValueOwner()->GetActorValue(RE::ActorValue::kSpeedMult);
-
-			mount->GetMagicCaster(RE::MagicSystem::CastingSource::kInstant)
-				->CastSpellImmediate(Data::MountSprintBoostSpell,
-					false, mount, 1, false,
-					currentSpeedMult * Settings::MountedSprintBoostMagnitude / 100,
-					mount);
-		}
-	}
-
-	RE::ActiveEffect* SprintHandler::GetMountSprintBoostActiveEffect(RE::Actor* mount)
-	{
-		RE::BSSimpleList<RE::ActiveEffect*>* activeEffects = mount->AsMagicTarget()->GetActiveEffectList();
-		if (activeEffects) {
-			for (RE::ActiveEffect* activeEffect : *activeEffects) {
-				if (activeEffect->effect == Data::MountSprintBoostSpell->effects[0])
-					return activeEffect;
-			}
-		}
-		return nullptr;
-	}
-
 }

@@ -17,12 +17,6 @@ void Settings::ReadSettings()
 
 		//Mounted Sprint
 		ReadBoolSetting(mcm, "MountedSprint", "bAlternateMountedSprint", AlternateMountedSprint);
-		ReadBoolSetting(mcm, "MountedSprint", "bMountedSprintBoost", MountedSprintBoost);
-		ReadFloatSetting(mcm, "MountedSprint", "fMountedSprintBoostMagnitude", MountedSprintBoostMagnitude);
-		ReadBoolSetting(mcm, "MountedSprint", "bMountedSprintBoostFXS", MountedSprintBoostFXS);
-		ReadFloatSetting(mcm, "MountedSprint", "fMountedSprintBoostCost", MountedSprintBoostCost);
-		ReadFloatSetting(mcm, "MountedSprint", "iMountedSprintBoostDuration", MountedSprintBoostDuration);
-		ReadFloatSetting(mcm, "MountedSprint", "iMountedSprintBoostDelay", MountedSprintBoostDelay);
 	};
 
 	readMCM(defaultSettingsPath);  // read the default ini first

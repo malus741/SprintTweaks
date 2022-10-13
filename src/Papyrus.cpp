@@ -1,5 +1,4 @@
 #include "Papyrus.h"
-#include "Data.h"
 #include "Hooks.h"
 #include "Settings.h"
 
@@ -8,7 +7,6 @@ namespace Papyrus
 	void SprintTweaks_MCM::OnConfigClose(RE::TESQuest*)
 	{
 		Settings::ReadSettings();
-		Data::LoadData();
 	}
 
 	bool SprintTweaks_MCM::Register(RE::BSScript::IVirtualMachine* a_vm)

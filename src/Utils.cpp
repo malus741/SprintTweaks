@@ -13,10 +13,4 @@ namespace Utils
 		REL::Relocation<func_t> func(REL::RelocationID{ 51907, 52845 });
 		return func(a_meter);
 	}
-
-	uint32_t Utils::GetTrampolineAllocSize(uint32_t size)
-	{
-		uint32_t nextPowerOf2 = pow(2, ceil(log(size) / log(2)));
-		return nextPowerOf2;
-	}
 }

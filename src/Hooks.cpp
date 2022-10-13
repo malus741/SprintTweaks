@@ -4,31 +4,15 @@
 
 namespace Hooks
 {
-	void SprintHandlerHook::ProcessButtonEx(RE::ButtonEvent* a_event, RE::PlayerControlsData* a_data)
+	void SprintHandlerHook::ProcessButtonEx(RE::SprintHandler* a_this, RE::ButtonEvent* a_event, RE::PlayerControlsData* a_data)
 	{
 		RE::PlayerCharacter* player = RE::PlayerCharacter::GetSingleton();
 
 		if (Settings::AlternateMountedSprint && player->IsOnMount()) {
-			SprintHandler::HandleAlternateMountSprint(a_event, player);
+			_ProcessButtonFn(a_this, a_event, a_data);
 		} else {
 			SprintHandler::HandlePlayerSprint(a_event, player);
 		}
-	}
-
-	char ActorStateHook::RemoveMovementFlags(RE::ActorState* a_state, uint16_t a2)
-	{
-		char result = _RemoveMovementFlags(a_state, a2);
-
-		if (Settings::MountedSprintBoost && !a_state->IsSprinting()) {
-			auto actor = SKSE::stl::adjust_pointer<RE::Character>(a_state, -0x0B8);
-			if (actor && actor->IsAMount()) {
-				RE::ActiveEffect* mountSprintBoostActiveEffect = SprintHandler::GetMountSprintBoostActiveEffect(actor);
-				if (mountSprintBoostActiveEffect)
-					mountSprintBoostActiveEffect->Dispel(true);
-			}
-		}
-
-		return result;
 	}
 
 	RE::BSEventNotifyControl MenuOpenCloseEventHandler::ProcessEvent(const RE::MenuOpenCloseEvent* a_event, RE::BSTEventSource<RE::MenuOpenCloseEvent>* a_dispatcher)
@@ -59,15 +43,4 @@ namespace Hooks
 		RE::UI* ui = RE::UI::GetSingleton();
 		ui->GetEventSource<RE::MenuOpenCloseEvent>()->AddEventSink(&g_menuOpenCloseEventHandler);
 	}
-
-	/*
-		General PlayerCharacter update method, called every frame (?), delta is in-game time passed since last call.
-		Replaced by the ActorStateHook hook for performance, kept here for future reference
-
-	void PlayerCharacterHook::Update(RE::PlayerCharacter* player, float a_delta)
-	{
-		_Update(player, a_delta);
-	}
-
-	*/
 }
