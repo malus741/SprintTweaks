@@ -58,26 +58,38 @@ namespace SprintHandler
 		}
 	}
 
+	bool wasPlayerSprinting;
 	void SprintHandler::HandleAlternateMountSprint(RE::ButtonEvent* a_event, RE::PlayerCharacter* player)
 	{
 		RE::NiPointer<RE::Actor> currentMount;
 		bool                     isPlayerSprinting = IsPlayerSprinting(player);
+		float                    mountSprintDelaySeconds = Settings::MountedSprintBoostDelay / 1000;
 
 		if (player->GetMount(currentMount)) {
 			if (a_event->IsDown()) {
+				wasPlayerSprinting = isPlayerSprinting;
+
 				if (!isPlayerSprinting)
 					return StartSprinting(player);
 
-				if (Settings::MountedSprintBoost) {
+				if (!Settings::MountedSprintBoost)
+					return StopSprinting(player);
+
+				if (!Settings::MountedSprintBoostHold) {
 					if (currentMount->AsActorValueOwner()->GetActorValue(RE::ActorValue::kStamina) < Settings::MountedSprintBoostCost)
 						return Utils::FlashStaminaMeter();
 
 					CastMountSprintBoostSpell(currentMount.get());
 					currentMount->AsActorValueOwner()->RestoreActorValue(RE::ACTOR_VALUE_MODIFIER::kDamage, RE::ActorValue::kStamina, -Settings::MountedSprintBoostCost);
-
-				} else {
-					if (isPlayerSprinting)
-						StopSprinting(player);
+				}
+			} else if (a_event->IsHeld() && Settings::MountedSprintBoostHold && isPlayerSprinting && a_event->HeldDuration() >= mountSprintDelaySeconds) {
+				wasPlayerSprinting = isPlayerSprinting;
+				CastMountSprintBoostSpell(currentMount.get());
+			} else if (a_event->IsUp() && Settings::MountedSprintBoostHold && wasPlayerSprinting) {
+				if (a_event->HeldDuration() <= 0.2f) {
+					StopSprinting(player);
+				} else if (a_event->HeldDuration() >= mountSprintDelaySeconds) {
+					SprintHandler::DispelMountSprintBoostSpell(currentMount.get());
 				}
 			}
 		}
@@ -98,6 +110,13 @@ namespace SprintHandler
 					currentSpeedMult * Settings::MountedSprintBoostMagnitude / 100,
 					mount);
 		}
+	}
+
+	void SprintHandler::DispelMountSprintBoostSpell(RE::Actor* mount)
+	{
+		RE::ActiveEffect* mountSprintBoostActiveEffect = SprintHandler::GetMountSprintBoostActiveEffect(mount);
+		if (mountSprintBoostActiveEffect)
+			mountSprintBoostActiveEffect->Dispel(true);
 	}
 
 	RE::ActiveEffect* SprintHandler::GetMountSprintBoostActiveEffect(RE::Actor* mount)

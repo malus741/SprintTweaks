@@ -11,6 +11,7 @@ public:
 	static inline float MountedSprintBoostCost = 30.0f;
 	static inline float MountedSprintBoostDuration = 5.0f;
 	static inline float MountedSprintBoostDelay = 3000.0f;
+	static inline bool  MountedSprintBoostHold = true;
 	static void         ReadSettings();
 
 private:

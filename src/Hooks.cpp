@@ -22,9 +22,7 @@ namespace Hooks
 		if (Settings::MountedSprintBoost && !a_state->IsSprinting()) {
 			auto actor = SKSE::stl::adjust_pointer<RE::Character>(a_state, -0x0B8);
 			if (actor && actor->IsAMount()) {
-				RE::ActiveEffect* mountSprintBoostActiveEffect = SprintHandler::GetMountSprintBoostActiveEffect(actor);
-				if (mountSprintBoostActiveEffect)
-					mountSprintBoostActiveEffect->Dispel(true);
+				SprintHandler::DispelMountSprintBoostSpell(actor);
 			}
 		}
 
