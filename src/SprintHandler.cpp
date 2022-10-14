@@ -48,16 +48,4 @@ namespace SprintHandler
 			StopSprinting(player);
 		}
 	}
-
-	void SprintHandler::HandleAlternateMountSprint(RE::ButtonEvent* a_event, RE::PlayerCharacter* player)
-	{
-		RE::NiPointer<RE::Actor> currentMount;
-		bool                     isPlayerSprinting = IsPlayerSprinting(player);
-
-		if (player->GetMount(currentMount)) {
-			if (a_event->IsDown()) {
-				isPlayerSprinting ? StopSprinting(player) : StartSprinting(player);
-			}
-		}
-	}
 }
