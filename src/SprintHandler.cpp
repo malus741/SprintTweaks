@@ -109,14 +109,33 @@ namespace SprintHandler
 					false, mount, 1, false,
 					currentSpeedMult * Settings::MountedSprintBoostMagnitude / 100,
 					mount);
+
+			UpdateMountedSprintBoostHoldCostMultiplier();
 		}
 	}
 
 	void SprintHandler::DispelMountSprintBoostSpell(RE::Actor* mount)
 	{
 		RE::ActiveEffect* mountSprintBoostActiveEffect = SprintHandler::GetMountSprintBoostActiveEffect(mount);
-		if (mountSprintBoostActiveEffect)
+		if (mountSprintBoostActiveEffect) {
 			mountSprintBoostActiveEffect->Dispel(true);
+			UpdateMountedSprintBoostHoldCostMultiplier(false);
+		}
+	}
+
+	void SprintHandler::UpdateMountedSprintBoostHoldCostMultiplier(bool isApply)
+	{
+		if ((!Settings::AlternateMountedSprint || Settings::MountedSprintBoostHold) && Settings::MountedSprintBoostHoldCostMultiplier > 1) {
+			auto gameSettingCollection = RE::GameSettingCollection::GetSingleton();
+			if (gameSettingCollection) {
+				if (Data::fSprintStaminaDrainMult && Data::OriginalfSprintStaminaDrainMultValue) {
+					Data::fSprintStaminaDrainMult->data.f = isApply 
+						? Data::OriginalfSprintStaminaDrainMultValue.value() * Settings::MountedSprintBoostHoldCostMultiplier 
+						: Data::OriginalfSprintStaminaDrainMultValue.value();
+					gameSettingCollection->WriteSetting(Data::fSprintStaminaDrainMult);
+				}
+			}
+		}
 	}
 
 	RE::ActiveEffect* SprintHandler::GetMountSprintBoostActiveEffect(RE::Actor* mount)

@@ -3,8 +3,10 @@
 class Data
 {
 public:
-	static inline RE::SpellItem* MountSprintBoostSpell;
-	static void                  LoadData();
+	static inline RE::SpellItem*       MountSprintBoostSpell;
+	static inline RE::Setting*         fSprintStaminaDrainMult;
+	static inline std::optional<float> OriginalfSprintStaminaDrainMultValue;
+	static void                        LoadData();
 
 private:
 	static inline std::optional<float> originalColorKey1ColorAlpha;

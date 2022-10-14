@@ -10,6 +10,16 @@ void Data::LoadData()
 		loader.load(Data::MountSprintBoostSpell, 0x0D67);
 	}
 
+	if (!OriginalfSprintStaminaDrainMultValue && !fSprintStaminaDrainMult) {
+		auto gameSettingCollection = RE::GameSettingCollection::GetSingleton();
+		if (gameSettingCollection) {
+			fSprintStaminaDrainMult = gameSettingCollection->GetSetting("fSprintStaminaDrainMult");
+			if (fSprintStaminaDrainMult) {
+				OriginalfSprintStaminaDrainMultValue = fSprintStaminaDrainMult->GetFloat();
+			}
+		}
+	}
+
 	if (Data::MountSprintBoostSpell && Data::MountSprintBoostSpell->effects.size() > 0) {
 		RE::Effect* mountSprintBoostEffect = Data::MountSprintBoostSpell->effects[0];
 		mountSprintBoostEffect->effectItem.duration = static_cast<std::uint32_t>(Settings::MountedSprintBoostDuration);

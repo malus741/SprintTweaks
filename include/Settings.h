@@ -10,8 +10,9 @@ public:
 	static inline bool  MountedSprintBoostFXS = true;
 	static inline float MountedSprintBoostCost = 30.0f;
 	static inline float MountedSprintBoostDuration = 5.0f;
+	static inline bool  MountedSprintBoostHold = false;
 	static inline float MountedSprintBoostDelay = 3000.0f;
-	static inline bool  MountedSprintBoostHold = true;
+	static inline float MountedSprintBoostHoldCostMultiplier = 2.0f;
 	static void         ReadSettings();
 
 private:
